@@ -8,44 +8,6 @@ import (
 	"web-starter/models"
 )
 
-// Usage
-// err := &CustomError{
-// 	StatusCode: http.StatusNotFound,
-// 	Message:    "Page Not Found",
-// }
-// // Use HandleError to send the error response
-// HandleError(w, err.StatusCode, err.Message)
-
-// ErrorHandler handles different types of errors and sends an appropriate response
-// func ErrorHandler(w http.ResponseWriter, err error) {
-// 	var statusCode int
-// 	var message string
-
-// 	switch e := err.(type) {
-// 	case *CustomError:
-// 		statusCode = e.StatusCode
-// 		message = e.Message
-// 	case *net.OpError:
-// 		statusCode = http.StatusInternalServerError
-// 		message = "A network error occurred"
-// 	default:
-// 		switch err.Error() {
-// 		case "bad request":
-// 			statusCode = http.StatusBadRequest
-// 			message = "Bad Request"
-// 		case "not found":
-// 			statusCode = http.StatusNotFound
-// 			message = "Not Found LOL"
-// 		default:
-// 			statusCode = http.StatusInternalServerError
-// 			message = "Internal Server Error"
-// 		}
-// 	}
-
-// 	// Call HandleError to send the error response
-// 	HandleError(w, statusCode, message)
-// }
-
 // HandleError sends an error response with the given status code and message
 func HandleError(w http.ResponseWriter, status int, message string) {
 	w.WriteHeader(status)
@@ -59,34 +21,6 @@ func HandleError(w http.ResponseWriter, status int, message string) {
 	renderTemplate(w, "error", data)
 	// renderTemplate(w, "layout", data)
 }
-
-// WithErrorHandling middleware that handles all errors and panics
-// func WithErrorHandling(next http.Handler) http.Handler {
-// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-// 		defer func() {
-// 			// called to catch any panics
-
-// 			if err := recover(); err != nil {
-// 				// Log the error and stack trace
-// 				log.Printf("Panic: %v\n%s", err, debug.Stack())
-
-// 				// Set the status code to 500
-// 				w.WriteHeader(http.StatusInternalServerError)
-
-// 				// Render the error page
-// 				data := struct {
-// 					Code    int
-// 					Message string
-// 				}{
-// 					Code:    http.StatusInternalServerError,
-// 					Message: "Internal Server Error",
-// 				}
-// 				renderTemplate(w, "error", data)
-// 			}
-// 		}()
-// 		next.ServeHTTP(w, r)
-// 	})
-// }
 
 // WithErrorHandling middleware that handles all errors and panics
 func WithErrorHandling(next http.Handler) http.Handler {
