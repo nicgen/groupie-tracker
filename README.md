@@ -25,6 +25,15 @@ go run cmd/groupie_tracker/main.go
 
 **Standard Practice**: This follows the convention used in most Go projects, making it easier for other developers to understand and navigate your project.
 
+### Reproduce
+
+```bash
+mkdir -p {cmd,handlers,models,static/{css,img,js},templates}
+mkdir cmd/<project-name>
+touch cmd/<project-name>/main.go handlers/{index,about,error}.go README.md static/{css/styles.css,img/about.txt} templates/{about,error,index,layout}.html
+go mod init <project-name>
+```
+
 ## error handling
 
 <!-- middleware refers to a function that wraps an HTTP handler to add additional behavior before
