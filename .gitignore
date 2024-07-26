@@ -34,3 +34,6 @@ static/export/*.*
 
 # build
 /build
+
+# test files (not handled yet)
+*_test.go

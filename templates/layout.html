@@ -11,6 +11,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png">
     <link rel="manifest" href="/static/img/site.webmanifest">
     <link rel="stylesheet" href="/static/css/styles.css">
+    <!-- <meta name="color-scheme" content="dark light"> -->
 </head>
 <body>
     <header>
@@ -19,6 +20,9 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/about">About</a></li>
             </ul>
+            <button id="theme-toggle">
+                <span class="icon moon"></span> <!-- Default to sun icon -->
+            </button>
         </nav>
     </header>
     <main>
@@ -28,6 +32,7 @@
     <footer>
         <p>&copy; 2024 My Web App</p>
     </footer>
+    <script src="/static/js/script.js"></script>
 </body>
 </html>
 {{end}}
