@@ -22,7 +22,7 @@
 #go.work
 
 # AIR
-.air.toml
+# .air.toml
 tmp
 
 # src
