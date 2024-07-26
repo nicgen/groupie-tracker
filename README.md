@@ -15,6 +15,12 @@ air
 go run cmd/groupie_tracker/main.go
 ```
 
+Note: for air to work you need to modify a line in `.air.toml`
+
+```.air.toml
+ cmd = "go build -o ./tmp/main ./cmd/<project_name>/main.go"
+```
+
 ## Architecture
 
 ### Single go.mod
@@ -32,6 +38,10 @@ mkdir -p {cmd,handlers,models,static/{css,img,js},templates}
 mkdir cmd/<project-name>
 touch cmd/<project-name>/main.go handlers/{index,about,error}.go README.md static/{css/styles.css,img/about.txt} templates/{about,error,index,layout}.html
 go mod init <project-name>
+air init
+sed 's/  cmd = "go build -o .\/tmp\/main ."/  cmd = "go build -o .\/tmp\/main .\/cmd\/<project-name>\/main.go/g' .air.toml
+air -c .air.toml
+# after that launch it with `air`
 ```
 
 ## error handling
