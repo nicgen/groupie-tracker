@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"groupie_tracker/models"
 	"net/http"
+	"web-starter/models"
 )
 
 // IndexHandler handles requests to the root URL

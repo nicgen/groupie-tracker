@@ -1,11 +1,11 @@
 package handlers
 
 import (
-	"groupie_tracker/models"
 	"log"
 	"net"
 	"net/http"
 	"runtime/debug"
+	"web-starter/models"
 )
 
 // Usage

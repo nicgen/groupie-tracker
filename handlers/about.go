@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"groupie_tracker/models"
 	"net/http"
+	"web-starter/models"
 )
 
 func AboutHandler(w http.ResponseWriter, r *http.Request) {

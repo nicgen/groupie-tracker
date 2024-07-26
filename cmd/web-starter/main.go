@@ -1,7 +1,7 @@
 package main
 
 import (
-	"groupie_tracker/handlers"
+	"web-starter/handlers"
 	// "handlers"
 	"log"
 	"net/http"
