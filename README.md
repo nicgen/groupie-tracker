@@ -8,7 +8,22 @@ This project is made to accelerate a web app creation by
 
 ## Usage
 
+```go
+// with air
+air
+// manualy
+go run cmd/groupie_tracker/main.go
+```
+
 ## Architecture
+
+### Single go.mod
+
+**Simplicity**: A single go.mod file at the root of your project keeps things simple and straightforward. It reduces complexity by centralizing dependency management.
+
+**Consistency**: Ensures that all parts of the project use the same versions of dependencies, avoiding conflicts and inconsistencies.
+
+**Standard Practice**: This follows the convention used in most Go projects, making it easier for other developers to understand and navigate your project.
 
 ## error handling
 
@@ -23,9 +38,11 @@ The WithErrorHandling middleware uses HandleError within a defer statement to ha
 
 ## testing
 
+<!-- not done yet -->
+
 ## Attribution
 
-This favicon was generated using the following graphics from Twitter Twemoji:
+This favicon was generated on [favicon.io](https://favicon.io/) using the following graphics from Twitter Twemoji:
 
 - Graphics Title: 2620.svg
 - Graphics Author: Copyright 2020 Twitter, Inc and other contributors (https://github.com/twitter/twemoji)

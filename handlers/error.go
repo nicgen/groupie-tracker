@@ -1,8 +1,8 @@
 package handlers
 
 import (
+	"groupie_tracker/models"
 	"log"
-	"models"
 	"net"
 	"net/http"
 	"runtime/debug"

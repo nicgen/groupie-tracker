@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"models"
+	"groupie_tracker/models"
 	"net/http"
 )
 
