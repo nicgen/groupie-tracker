@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -11,15 +12,18 @@ import (
 // HandleError sends an error response with the given status code and message
 func HandleError(w http.ResponseWriter, status int, message string) {
 	w.WriteHeader(status)
-	data := struct {
-		Code    int
-		Message string
-	}{
-		Code:    status,
-		Message: message,
+	data := models.PageData{
+		Title:  "Title Error",
+		Header: "Header Error",
+		Content: map[string]interface{}{
+			"Code":    status,
+			"Message": message,
+		},
 	}
-	renderTemplate(w, "error", data)
-	// renderTemplate(w, "layout", data)
+	fmt.Println(data)
+	// renderTemplate(w, "error", data)
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	renderTemplate(w, "layout", data)
 }
 
 // WithErrorHandling middleware that handles all errors and panics

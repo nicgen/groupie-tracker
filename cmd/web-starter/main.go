@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+
 	// // Create a new ServeMux
 	// mux := http.NewServeMux()
 
@@ -70,5 +71,6 @@ func setupServer(handler http.Handler) *http.Server {
 		WriteTimeout:      10 * time.Second,
 		IdleTimeout:       120 * time.Second,
 		MaxHeaderBytes:    1 << 20,
+		// ErrorLog: *log.Logger,
 	}
 }

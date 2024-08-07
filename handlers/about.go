@@ -7,10 +7,11 @@ import (
 
 func AboutHandler(w http.ResponseWriter, r *http.Request) {
 	data := models.PageData{
-		Title:  "LOL",
-		Header: "About",
+		Title:  "Title About",
+		Header: "Header About",
 		Content: map[string]interface{}{
 			"Message": "This is the about page.",
+			"other":   "other string",
 		},
 	}
 
