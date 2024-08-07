@@ -1,38 +1,51 @@
 {{define "layout"}}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{.Title}}</title>
-    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/static/img/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png">
-    <link rel="manifest" href="/static/img/site.webmanifest">
-    <link rel="stylesheet" href="/static/css/styles.css">
-    <!-- <meta name="color-scheme" content="dark light"> -->
-</head>
-<body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">About</a></li>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {{if .Data.IsError}}Error {{.Data.ErrorCode}} - {{end}}{{.Data.Title}}
+    </title>
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/img/apple-touch-icon.png"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/img/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/img/favicon-16x16.png"/>
+    <link rel="manifest" href="/static/img/site.webmanifest" />
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <header role="banner">
+        <div class="container">
+          <nav role="navigation">
+            <ul role="list">
+              <li role="listitem"><a href="/">Home</a></li>
+              <li role="listitem"><a href="/about">About</a></li>
+              <!-- ! not for production -->
+              <!-- <li role="listitem"><a href="/500">Force 500</a></li> 
+                    <li role="listitem"><a href="/error">Force Error</a></li> -->
             </ul>
-            <button id="theme-toggle">
-                <span class="icon moon"></span> <!-- Default to sun icon -->
-            </button>
-        </nav>
-    </header>
-    <main>
-        <h1>{{.Header}}</h1>
-        {{template "content" .}}
-    </main>
-    <footer>
-        <p>&copy; 2024 My Web App</p>
-    </footer>
-    <script src="/static/js/script.js"></script>
-</body>
+            <button id="theme-toggle" class="theme-toggle auto" aria-label="Toggle theme"></button>
+          </nav>
+        </div>
+      </header>
+      <main role="main">
+        <div class="container">
+          {{if .Data.IsError}}
+          <h1 role="heading" aria-level="1">Error {{.Data.ErrorCode}}</h1>
+          {{else}}
+          <h1 role="heading" aria-level="1">{{.Data.Header}}</h1>
+          {{end}} {{.Content}}
+        </div>
+      </main>
+      <footer role="contentinfo">
+        <div class="container">
+          <p>&copy; 2024 My Web App</p>
+        </div>
+      </footer>
+      <script src="/static/js/theme.js"></script>
+    </div>
+  </body>
 </html>
 {{end}}

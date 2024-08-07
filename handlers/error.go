@@ -9,21 +9,21 @@ import (
 	"web-starter/models"
 )
 
-// HandleError sends an error response with the given status code and message
-func HandleError(w http.ResponseWriter, status int, message string) {
-	w.WriteHeader(status)
+// HandleError handles error requests and send an error response with the given status code and message
+func HandleError(w http.ResponseWriter, statusCode int, message string) {
+	w.WriteHeader(statusCode)
 	data := models.PageData{
-		Title:  "Title Error",
-		Header: "Header Error",
+		Title:  "Error",
+		Header: fmt.Sprintf("Error %d", statusCode),
+		// Content:   message,
 		Content: map[string]interface{}{
-			"Code":    status,
-			"Message": message,
+			"Message":   message,
+			"Paragraph": "This is a new paragraph",
 		},
+		IsError:   true,
+		ErrorCode: statusCode,
 	}
-	fmt.Println(data)
-	// renderTemplate(w, "error", data)
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	renderTemplate(w, "layout", data)
+	renderTemplate(w, "error", data)
 }
 
 // WithErrorHandling middleware that handles all errors and panics
@@ -31,22 +31,25 @@ func WithErrorHandling(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if err := recover(); err != nil {
-				// Log the error and stack trace
+				// log the error and stack trace
 				log.Printf("Panic: %v\n%s", err, debug.Stack())
 
-				// Determine the status code and message
+				// default status code and message
 				statusCode := http.StatusInternalServerError
 				message := "Internal Server Error"
 
+				// switch to determine the status code and message
 				switch e := err.(type) {
-				case *models.CustomError:
+				case *models.CustomError: // handles your custom error type
+					fmt.Println(">>>>>>>>>>CUSTOM<<<<<<<<<<")
 					statusCode = e.StatusCode
 					message = e.Message
-				case *net.OpError:
+				case *net.OpError: // for network-related errors
 					statusCode = http.StatusInternalServerError
 					message = "A network error occurred"
-				default:
-					switch err.(string) {
+				case string: // direct string panics
+					fmt.Println(">>>>>>>>>>STRING<<<<<<<<<<")
+					switch e {
 					case "bad request":
 						statusCode = http.StatusBadRequest
 						message = "Bad Request"
@@ -54,12 +57,17 @@ func WithErrorHandling(next http.Handler) http.Handler {
 						statusCode = http.StatusNotFound
 						message = "Not Found"
 					default:
+						fmt.Println(">>>>>>>>>>STRING:Internal<<<<<<<<<<")
 						statusCode = http.StatusInternalServerError
 						message = "Internal Server Error"
 					}
+				default: // handle other types of panics
+					fmt.Println(">>>>>>>>>>PANIC<<<<<<<<<<")
+					statusCode = http.StatusInternalServerError
+					message = "Internal Server Error"
 				}
 
-				// Render the error page
+				// render the error page
 				HandleError(w, statusCode, message)
 			}
 		}()
@@ -67,7 +75,19 @@ func WithErrorHandling(next http.Handler) http.Handler {
 	})
 }
 
-// Force500Handler forces a 500 error for testing purposes
+// ! Force500Handler forces a 500 error (for testing purposes)
 func Force500Handler(w http.ResponseWriter, r *http.Request) {
-	panic("This is a forced panic to test 500 error handling")
+	// panic("This is a forced panic to test 500 error handling")
+	panic(&models.CustomError{ // custom
+		StatusCode: http.StatusInternalServerError,
+		Message:    "Oh, snap! Internal Server Error",
+	})
+}
+
+// ! ForceDirectError forces a direct string error (for testing purposes)
+func ForceDirectError(w http.ResponseWriter, r *http.Request) {
+	// panic("This is a forced panic to test the direct string error") // string(default)
+	panic("bad request")
+	// panic("not found")
+	// panic("Internal Server Error")
 }

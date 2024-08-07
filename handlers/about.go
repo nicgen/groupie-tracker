@@ -5,16 +5,16 @@ import (
 	"web-starter/models"
 )
 
+// IndexHandler handles requests to the /about URL
 func AboutHandler(w http.ResponseWriter, r *http.Request) {
 	data := models.PageData{
-		Title:  "Title About",
-		Header: "Header About",
+		Title:  "About",
+		Header: "About Us",
 		Content: map[string]interface{}{
-			"Message": "This is the about page.",
-			"other":   "other string",
+			"Message": "Learn more about our company and mission.",
 		},
+		IsError: false,
 	}
-
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	renderTemplate(w, "layout", data)
+	renderTemplate(w, "about", data)
 }
