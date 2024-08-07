@@ -1,0 +1,33 @@
+{{define "artist"}}
+<div class="artist-page">
+    <img src="{{.Content.Image}}" alt="{{.Content.Name}}" class="artist-image">
+    <h2>{{.Content.Name}}</h2>
+    <p><strong>Members:</strong> {{range .Content.Members}}{{.}} {{end}}</p>
+    <p><strong>Creation Date:</strong> {{.Content.CreationDate}}</p>
+    <p><strong>First Album:</strong> {{.Content.FirstAlbum}}</p>
+    
+    <h3>Locations:</h3>
+    <ul>
+    {{range .Content.Locations}}
+        <li>{{.}}</li>
+    {{end}}
+    </ul>
+    
+    <h3>Concert Dates:</h3>
+    <ul>
+    {{range .Content.ConcertDates}}
+        <li>{{.}}</li>
+    {{end}}
+    </ul>
+    
+    <h3>Relations:</h3>
+    {{range $location, $dates := .Content.Relations}}
+        <h4>{{$location}}</h4>
+        <ul>
+        {{range $dates}}
+            <li>{{.}}</li>
+        {{end}}
+        </ul>
+    {{end}}
+</div>
+{{end}}

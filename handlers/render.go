@@ -9,13 +9,13 @@ import (
 )
 
 // load all templates
-var templates = template.Must(template.ParseGlob(filepath.Join("templates", "*.html")))
+var Templates = template.Must(template.ParseGlob(filepath.Join("templates", "*.html")))
 
 // ensures all templates are parsed only once when the application starts
 func init() {
 	var err error
 	// Parse all templates in the templates directory
-	templates, err = template.ParseGlob("templates/*.html")
+	Templates, err = template.ParseGlob("templates/*.html")
 	if err != nil {
 		log.Fatalf("Error parsing templates: %v", err)
 	}
@@ -33,7 +33,7 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 
 	// execute the specific template first
 	var buf bytes.Buffer
-	err := templates.ExecuteTemplate(&buf, tmpl, data)
+	err := Templates.ExecuteTemplate(&buf, tmpl, data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -48,7 +48,7 @@ func renderTemplate(w http.ResponseWriter, tmpl string, data interface{}) {
 		Data:    data,
 	}
 
-	err = templates.ExecuteTemplate(w, layout, layoutData)
+	err = Templates.ExecuteTemplate(w, layout, layoutData)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

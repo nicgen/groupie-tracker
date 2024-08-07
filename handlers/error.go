@@ -2,15 +2,16 @@ package handlers
 
 import (
 	"fmt"
+	"groupie-tracker/models"
 	"log"
 	"net"
 	"net/http"
 	"runtime/debug"
-	"web-starter/models"
 )
 
 // HandleError handles error requests and send an error response with the given status code and message
 func HandleError(w http.ResponseWriter, statusCode int, message string) {
+	fmt.Println("HandleError", statusCode)
 	w.WriteHeader(statusCode)
 	data := models.PageData{
 		Title:  "Error",
@@ -28,6 +29,7 @@ func HandleError(w http.ResponseWriter, statusCode int, message string) {
 
 // WithErrorHandling middleware that handles all errors and panics
 func WithErrorHandling(next http.Handler) http.Handler {
+	fmt.Println("WithErrorHandling")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if err := recover(); err != nil {

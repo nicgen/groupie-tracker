@@ -214,3 +214,23 @@ footer {
   margin-top: auto; /* Pushes the footer to the bottom */
 }
 
+/* ARTISTS */
+
+.artist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.artist-card {
+  text-align: center;
+}
+
+.artist-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.artist-page {
+  text-align: center;
+}
