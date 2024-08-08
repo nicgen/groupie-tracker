@@ -31,13 +31,25 @@ func ArtistHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// sortedConcerts := models.SortConcerts(&artist)
+	sortedConcerts := models.SortConcerts(&artist)
+	formattedConcertsHTML := models.FormatConcertsHTML(sortedConcerts)
+
 	data := models.PageData{
-		Title:   artist.Name,
-		Header:  artist.Name,
-		Content: artist,
+		Title:  artist.Name,
+		Header: artist.Name,
+		Content: map[string]interface{}{
+			"Artist":                artist,
+			"Image":                 artist.Image,
+			"Members":               artist.Members,
+			"SortedConcerts":        sortedConcerts,
+			"CreationDate":          artist.CreationDate,
+			"FirstAlbum":            artist.FirstAlbum, // Note: This was CreationDate in your example, which seems incorrect
+			"FormattedConcertsHTML": formattedConcertsHTML,
+		},
 		IsError: false,
 	}
-
+	// artist.SortedConcerts() // This will populate the sorted concerts slice
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	renderTemplate(w, "artist", data)
 }

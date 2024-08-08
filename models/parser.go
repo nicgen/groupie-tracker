@@ -4,6 +4,7 @@ package models
 
 import (
 	"encoding/json"
+	"fmt"
 	"groupie-tracker/lib"
 	"net/http"
 	"strings"
@@ -22,7 +23,8 @@ func FetchArtists() ([]Artist, error) {
 	once.Do(func() {
 		artists, err = fetchArtistsData()
 		if err == nil {
-			artistsMap = make(map[int]Artist)
+			// artistsMap = make(map[int]Artist)
+			artistsMap = make(map[int]Artist, len(artists))
 			for _, artist := range artists {
 				artistsMap[artist.ID] = artist
 			}
@@ -95,15 +97,22 @@ func fetchDates(artist *Artist) {
 		d = strings.TrimPrefix(d, "*")
 
 		// Parse the date
+		// t, err := time.Parse("02-01-2006", d)
+		// if err != nil {
+		// 	// If parsing fails, keep the original format
+		// 	formattedDates = append(formattedDates, d)
+		// 	continue
+		// }
 		t, err := time.Parse("02-01-2006", d)
-		if err != nil {
-			// If parsing fails, keep the original format
-			formattedDates = append(formattedDates, d)
-			continue
+		if err == nil {
+			artist.ConcertDates = append(artist.ConcertDates, t.Format("January 2, 2006"))
+		} else {
+			// Log the error or handle it appropriately
+			fmt.Println("erro")
 		}
 
 		// Format the date as "January 2, 2006"
-		formattedDates = append(formattedDates, t.Format("January 2, 2006"))
+		// formattedDates = append(formattedDates, t.Format("January 2, 2006"))
 	}
 
 	artist.ConcertDates = formattedDates
@@ -133,10 +142,14 @@ func fetchLocations(artist *Artist) {
 		country := strings.ToUpper(parts[1])
 
 		// Capitalize each word in the city name
-		cityParts := strings.Fields(city)
-		for i, part := range cityParts {
+		// cityParts := strings.Fields(city)
+		// for i, part := range cityParts {
 
-			cityParts[i] = lib.ProperTitle(strings.ToLower(part))
+		// 	cityParts[i] = lib.ProperTitle(strings.ToLower(part))
+		// }
+		cityParts := strings.Fields(strings.ReplaceAll(parts[0], "_", " "))
+		for i, part := range cityParts {
+			cityParts[i] = lib.ProperTitle(part)
 		}
 		city = strings.Join(cityParts, " ")
 
