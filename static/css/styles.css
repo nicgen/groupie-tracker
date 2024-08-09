@@ -132,11 +132,24 @@ main .container{
 }
 
 /* ! for testing purpose */
+.hidden{
+  display: none;
+}
 .wrapper{
   border: 2px dashed red;
 }
 .container{
   border: 2px dashed green;
+}
+.banner {
+  background-color: orange;
+  /* padding: 10px 20px; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.banner .container{
+  padding: 2px 1rem;
 }
 
 /* NAV BAR ------------------------------------------*/

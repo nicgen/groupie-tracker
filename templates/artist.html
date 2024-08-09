@@ -6,7 +6,17 @@
     <p><strong>Creation Date:</strong> {{.Content.CreationDate}}</p>
     <p><strong>First Album:</strong> {{.Content.FirstAlbum}}</p>
     
+    <!-- <div class="hidden">
+    {{ .Content.Concert }}
+    </div>
 
+    <div class="hidden">
+        {{ .Content.FormattedConcertsHTML }}
+    </div>
+
+    <div class="hidden">
+        {{ .Content.FormattedConcertsHTML }}
+    </div> -->
 
     {{ range .Content.SortedConcerts }}
     <h3>{{ .Year }}</h3>
