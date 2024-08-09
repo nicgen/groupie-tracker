@@ -30,8 +30,8 @@ func setupMux() *http.ServeMux {
 	mux.HandleFunc("/", handlers.IndexHandler)
 	mux.HandleFunc("/artist/", handlers.ArtistHandler)
 	mux.HandleFunc("/about", handlers.AboutHandler)
-	// mux.HandleFunc("/error", handlers.ForceDirectError) // !for testing purpose only (not for production)
-	// mux.HandleFunc("/500", handlers.Force500Handler)    // !for testing purpose only (not for production)
+	mux.HandleFunc("/error", handlers.ForceDirectError) // !for testing purpose only (not for production)
+	mux.HandleFunc("/500", handlers.Force500Handler)    // !for testing purpose only (not for production)
 
 	return mux
 }
