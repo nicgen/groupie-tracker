@@ -39,13 +39,15 @@ func ArtistHandler(w http.ResponseWriter, r *http.Request) {
 		Title:  artist.Name,
 		Header: artist.Name,
 		Content: map[string]interface{}{
+			"Id":                    artist.ID,
 			"Artist":                artist,
 			"Image":                 artist.Image,
 			"Members":               artist.Members,
-			"SortedConcerts":        sortedConcerts,
 			"CreationDate":          artist.CreationDate,
 			"FirstAlbum":            artist.FirstAlbum, // Note: This was CreationDate in your example, which seems incorrect
+			"SortedConcerts":        sortedConcerts,
 			"FormattedConcertsHTML": formattedConcertsHTML,
+			"Concert":               artist.ConcertDates,
 		},
 		IsError: false,
 	}

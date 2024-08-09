@@ -1,5 +1,3 @@
-// models/artist_data.go
-
 package models
 
 import (
