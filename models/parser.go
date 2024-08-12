@@ -2,12 +2,10 @@ package models
 
 import (
 	"encoding/json"
-	"fmt"
 	"groupie-tracker/lib"
 	"net/http"
 	"strings"
 	"sync"
-	"time"
 )
 
 var (
@@ -15,6 +13,10 @@ var (
 	artistsMap map[int]Artist
 	once       sync.Once
 )
+
+func init() {
+	FetchArtists()
+}
 
 func FetchArtists() ([]Artist, error) {
 	var err error
@@ -57,6 +59,7 @@ func fetchArtistsData() ([]Artist, error) {
 	return artists, nil
 }
 
+// fetch the linked data (locations, concertDates and relations)
 func fetchRelatedData(artist *Artist) {
 	var wg sync.WaitGroup
 	wg.Add(3)
@@ -89,31 +92,27 @@ func fetchDates(artist *Artist) {
 	var date Date
 	json.NewDecoder(resp.Body).Decode(&date)
 
-	formattedDates := make([]string, 0, len(date.Dates))
-	for _, d := range date.Dates {
-		// Remove the asterisk if present
-		d = strings.TrimPrefix(d, "*")
+	artist.ConcertDates = FormatDates(date.Dates, artist.ConcertDates, artist.FirstAlbum)
 
-		// Parse the date
-		// t, err := time.Parse("02-01-2006", d)
-		// if err != nil {
-		// 	// If parsing fails, keep the original format
-		// 	formattedDates = append(formattedDates, d)
-		// 	continue
-		// }
-		t, err := time.Parse("02-01-2006", d)
-		if err == nil {
-			artist.ConcertDates = append(artist.ConcertDates, t.Format("January 2, 2006"))
-		} else {
-			// Log the error or handle it appropriately
-			fmt.Println("erro")
-		}
+	// formattedDates := make([]string, 0, len(date.Dates))
+	// for _, d := range date.Dates {
+	// 	// Remove the asterisk if present
+	// 	d = strings.TrimPrefix(d, "*")
 
-		// Format the date as "January 2, 2006"
-		// formattedDates = append(formattedDates, t.Format("January 2, 2006"))
-	}
+	// 	// Parse the date
+	// 	t, err := time.Parse("02-01-2006", d)
+	// 	if err == nil {
+	// 		artist.ConcertDates = append(artist.ConcertDates, t.Format("January 2, 2006"))
+	// 		artist.FirstAlbum = t.Format("January 2, 2006")
+	// 	} else {
+	// 		// Log the error or handle it appropriately
+	// 		fmt.Println("erro")
+	// 	}
+	// }
 
-	artist.ConcertDates = formattedDates
+	// fmt.Printf("type: %T, value: %v", artist.FirstAlbum, artist.FirstAlbum)
+
+	// artist.ConcertDates = formattedDates
 }
 
 func fetchLocations(artist *Artist) {
@@ -128,30 +127,19 @@ func fetchLocations(artist *Artist) {
 
 	formattedLocations := make([]string, 0, len(location.Locations))
 	for _, loc := range location.Locations {
-		// Split the location into city and country
 		parts := strings.Split(loc, "-")
 		if len(parts) != 2 {
-			// If the format is unexpected, keep the original
 			formattedLocations = append(formattedLocations, loc)
 			continue
 		}
 
-		city := strings.ReplaceAll(parts[0], "_", " ")
-		country := strings.ToUpper(parts[1])
-
-		// Capitalize each word in the city name
-		// cityParts := strings.Fields(city)
-		// for i, part := range cityParts {
-
-		// 	cityParts[i] = lib.ProperTitle(strings.ToLower(part))
-		// }
 		cityParts := strings.Fields(strings.ReplaceAll(parts[0], "_", " "))
 		for i, part := range cityParts {
-			cityParts[i] = lib.ProperTitle(part)
+			cityParts[i] = lib.ProperTitle(strings.ToLower(part))
 		}
-		city = strings.Join(cityParts, " ")
+		city := strings.Join(cityParts, " ")
+		country := strings.ToUpper(parts[1])
 
-		// Combine the formatted city and country
 		formattedLoc := city + ", " + country
 		formattedLocations = append(formattedLocations, formattedLoc)
 	}
@@ -169,6 +157,11 @@ func fetchRelations(artist *Artist) {
 	var relation Relation
 	json.NewDecoder(resp.Body).Decode(&relation)
 	artist.Relations = relation.DatesLocations
+
+	// Example: Accessing the locations
+	// for location, dates := range artist.Relations {
+	// 	fmt.Printf("Location: %s\nDates: %v\n", location, dates)
+	// }
 }
 
 func GetArtistByID(id int) (Artist, bool) {

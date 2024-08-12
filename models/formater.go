@@ -2,7 +2,7 @@ package models
 
 import (
 	"fmt"
-	"html/template"
+	"groupie-tracker/lib"
 	"sort"
 	"strings"
 	"time"
@@ -21,7 +21,7 @@ func SortConcerts(artist *Artist) []YearConcerts {
 			year := date.Year()
 			concertMap[year] = append(concertMap[year], ConcertInfo{
 				Date:     date,
-				Location: location,
+				Location: formatLocation(location),
 			})
 		}
 	}
@@ -44,37 +44,72 @@ func SortConcerts(artist *Artist) []YearConcerts {
 	return yearConcerts
 }
 
-func FormatConcertsHTML(yearConcerts []YearConcerts) template.HTML {
-	var result strings.Builder
+// func FormatConcertsHTML(yearConcerts []YearConcerts) template.HTML {
+// 	var result strings.Builder
 
-	for _, yc := range yearConcerts {
-		result.WriteString(fmt.Sprintf("<h3>%d</h3><ul>", yc.Year))
-		for _, concert := range yc.Concerts {
-			formattedDate := concert.Date.Format("2 January")
-			formattedLocation := formatLocation(concert.Location)
-			result.WriteString(fmt.Sprintf("<li>%s - %s</li>", formattedDate, formattedLocation))
+// 	for _, yc := range yearConcerts {
+// 		result.WriteString(fmt.Sprintf("<h3>%d</h3><ul>", yc.Year))
+// 		for _, concert := range yc.Concerts {
+// 			formattedDate := concert.Date.Format("2 January") + "LOL"
+// 			formattedLocation := formatLocation(concert.Location) + "LOL"
+// 			result.WriteString(fmt.Sprintf("<li>%s - %s</li>", formattedDate, formattedLocation))
+// 		}
+// 		result.WriteString("</ul>")
+// 	}
+
+// 	return template.HTML(result.String())
+// }
+
+func FormatDates(date, concertDate []string, firstAlbum string) []string {
+	fmt.Println(date)
+	formattedDates := make([]string, 0, len(date))
+	for _, d := range date {
+		// Remove the asterisk if present
+		d = strings.TrimPrefix(d, "*")
+
+		// Parse the date
+		t, err := time.Parse("02-01-2006", d)
+		if err == nil {
+			concertDate = append(concertDate, t.Format("January 2, 2006"))
+			firstAlbum = t.Format("January 2, 2006")
+		} else {
+			// Log the error or handle it appropriately
+			fmt.Println("error")
 		}
-		result.WriteString("</ul>")
 	}
-
-	return template.HTML(result.String())
+	return formattedDates
 }
 
 func formatLocation(location string) string {
 	parts := strings.Split(location, "-")
+	fmt.Printf("type: %T, value: %v", parts, parts)
 	if len(parts) != 2 {
 		return location // Return as is if it doesn't match expected format
 	}
 
 	city := strings.ReplaceAll(parts[0], "_", " ")
-	country := strings.TrimSpace(parts[1])
+	country := strings.ReplaceAll(strings.TrimSpace(parts[1]), "_", " ")
+	if len(country) <= 3 {
+		country = strings.ToUpper(country)
+	} else {
+		country = lib.ProperTitle(strings.ToLower(country))
+	}
+
+	fmt.Println("COUNTRY:", country)
 
 	// Capitalize each word in the city name
 	cityParts := strings.Fields(city)
 	for i, part := range cityParts {
-		cityParts[i] = strings.Title(strings.ToLower(part))
+		cityParts[i] = lib.ProperTitle(strings.ToLower(part))
 	}
 	city = strings.Join(cityParts, " ")
 
-	return fmt.Sprintf("%s %s", city, country)
+	// countryParts := strings.Split(country, "_")
+	// for i, part := range countryParts {
+	// 	cityParts[i] = lib.ProperTitle(strings.ToLower(part))
+	// }
+	// country = strings.Join(countryParts, " ")
+
+	// fmt.Printf("%s %s", city, country)
+	return fmt.Sprintf("%s (%s)", city, country)
 }
